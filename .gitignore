@@ -1,7 +1,3 @@
 # Created by .ignore support plugin (hsz.mobi)
-.idea/containers.iml
-.idea/misc.xml
-.idea/modules.xml
-.idea/workspace.xml
 */password.sh
-
+.idea/
