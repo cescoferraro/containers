@@ -4,5 +4,8 @@ services:
     build:
       context: ./mongo
     image: cescoferraro/mongo:latest
-
+  redis:
+    build:
+      context: ./redis
+    image: cescoferraro/redis:latest
 
