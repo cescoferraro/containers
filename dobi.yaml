@@ -1,0 +1,71 @@
+meta:
+    project: containers
+    default: release
+
+alias=release:
+    tasks:
+      - mongo:push
+      - redis:push
+      - golang:push
+      - gonode:push
+      - 404:push
+      - clean
+
+env=vars:
+    variables: [VERSION=0.2.33]
+
+mount=source:
+    bind: .
+    path: /containers
+
+image=busybox:
+    image: busybox
+    tags: ["latest"]
+    pull: "once"
+
+job=passwd:
+    use: busybox
+    mounts: [source]
+    user: "{user.uid}"
+    command: sh passwd.sh
+    env:
+      - "PASSWD={env.PASSWD}"
+    working-dir: /containers
+
+job=clean:
+    use: busybox
+    mounts: [source]
+    command: rm mongo/password.sh redis/password.sh
+    working-dir: /containers
+
+
+image=mongo:
+    image: cescoferraro/mongo
+    tags: ["latest","{env.VERSION}"]
+    depends: [passwd,vars]
+    context: ./mongo
+
+image=redis:
+    image: cescoferraro/redis
+    tags: ["latest","{env.VERSION}"]
+    depends: [passwd,vars]
+    context: ./redis
+
+image=golang:
+    image: cescoferraro/golang
+    tags: ["latest","{env.VERSION}"]
+    depends: [passwd,vars]
+    context: ./golang
+
+image=gonode:
+    image: cescoferraro/gonode
+    tags: ["latest","{env.VERSION}"]
+    depends: [passwd,vars]
+    context: ./go+node
+
+
+image=404:
+    image: cescoferraro/404
+    tags: ["latest","{env.VERSION}"]
+    depends: [passwd,vars]
+    context: ./404

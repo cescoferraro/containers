@@ -10,7 +10,7 @@ if [ ! -f /.redis_configured ]; then
     touch /etc/redis/redis_default.conf
 
     if [ "${REDIS_PASS}" != "**None**" ]; then
-        PASS=${REDIS_PASS:-${MYPASSWORD}}
+        PASS=${REDIS_PASS:-${PASSWD}}
 
 
         _word=$( [ ${REDIS_PASS} ] && echo "preset" || echo "random" )
