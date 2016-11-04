@@ -7,6 +7,11 @@ RUN     go get github.com/golang/lint/golint && \
         cp /go/bin/golint /usr/bin/ && \
         rm -rf /go/src/* /go/pkg/* /go/bin/*
 
+RUN     go get github.com/cespare/reflex && \
+        cp /go/bin/reflex /usr/bin/ && \
+        rm -rf /go/src/* /go/pkg/* /go/bin/*
+
+
 RUN     export GLIDE=v0.12.3; \
         export SRC=https://github.com/Masterminds/glide/releases/download/; \
         curl -sL ${SRC}/${GLIDE}/glide-${GLIDE}-linux-amd64.tar.gz | \
