@@ -13,7 +13,7 @@ alias=release:
       - clean
 
 env=vars:
-    variables: [VERSION=0.2.33]
+    variables: [VERSION=0.3.0]
 
 mount=source:
     bind: .
@@ -52,6 +52,11 @@ image=404:
     tags: ["latest","{env.VERSION}"]
     depends: [passwd,vars]
     context: ./404
+
+image=nginx:
+    image: cescoferraro/nginx
+    tags: ["latest"]
+    context: ./nginx
 
 image=alpine:
     image: cescoferraro/alpine
