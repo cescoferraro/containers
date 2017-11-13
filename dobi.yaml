@@ -20,13 +20,12 @@ mount=source:
     path: /containers
 
 
-
-
 image=mongo:
     image: cescoferraro/mongo
     tags: ["latest","{env.VERSION}"]
     depends: [passwd,vars]
     context: ./mongo
+
 
 image=redis:
     image: cescoferraro/redis
@@ -69,7 +68,6 @@ image=kubectl:
     context: ./kubectl
 
 
-
 #Create a password file inside the projects that need it
 image=busybox:
     image: busybox
@@ -90,3 +88,32 @@ job=clean:
     mounts: [source]
     command: rm mongo/password.sh redis/password.sh
     working-dir: /containers
+
+# creates a MongoDB container running a fresh backup of ONNi Production MongoDB
+mount=dump:
+    bind: ./mongonni/
+    path: /app/
+image=mongod:
+  image: cescoferraro/mgo
+  context: .
+  steps: |
+    FROM mongo:3.2 
+    RUN mkdir -p /app
+    RUN chmod 777 /app
+    WORKDIR /app
+job=backup:
+    use: mongod
+    mounts: [dump]
+    working-dir: /app
+    command: mongodump --host 52.207.244.93 --db onni 
+image=mongonni:
+    image: cescoferraro/mongonni
+    tags: ["latest"]
+    depends: [vars,backup]
+    context: ./mongonni
+    steps: |
+      FROM mongo:3.2
+      COPY dump /home/dump
+      COPY mongo.sh /home/mongo.sh
+      RUN chmod 777 /home/mongo.sh
+      CMD /home/mongo.sh
