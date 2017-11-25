@@ -105,7 +105,7 @@ job=backup:
     use: mongod
     mounts: [dump]
     working-dir: /app
-    command: mongodump --host 52.207.244.93 --db onni 
+    command: bash -c "rm -rf dump && mongodump --host 52.207.244.93 --db onni" 
 image=mongonni:
     image: cescoferraro/mongonni
     tags: ["latest"]
